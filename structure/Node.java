@@ -1,3 +1,6 @@
+package structure;
+
+
 public class Node {
 
     private int value;
