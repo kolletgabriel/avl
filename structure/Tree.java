@@ -7,13 +7,17 @@ public class Tree {
 
     private ArrayList<Node> nodes;
     private Node root;
+    private int height;
+    private int size;
 
 
     public Tree(Node root) {
 
         this.root = root;
         this.nodes = new ArrayList<Node>();
-        this.addNode(root);
+        this.nodes.add(root);
+        this.height = 1;
+        this.size = 1;
     }
 
 
@@ -35,78 +39,73 @@ public class Tree {
     }
 
 
-    public void addNode(Node node) {
-
-        this.nodes.add(node);
-    }
-
-
     public int getSize() {
 
-        return this.nodes.size();
+        return this.size;
     }
 
 
-    private boolean insert(Node node1, Node node2) {
+    public int getHeight() {
 
-        if (node1.getValue() != node2.getValue()) {
+        return this.height;
+    }
 
-            if (node2.getValue() > node1.getValue()) {
 
-                if (node1.getRightSon() == null) {
-                    node1.setRightSon(node2);
-                    node2.setFather(node1);
-                    this.addNode(node2);
-                }
-                else {
-                    return insert(node1.getRightSon(), node2);
-                }
+    private boolean addBiggerNode(Node father, Node newNode) {
+
+        if (father.getRightSon() == null) {
+            father.setRightSon(newNode);
+            newNode.setFather(father);
+            this.nodes.add(newNode);
+            this.size++;
+            if (father.getLeftSon() == null) {
+                this.height++;
+            } return true;
+        } return false;
+    }
+
+
+    private boolean addLesserNode(Node father, Node newNode) {
+
+        if (father.getLeftSon() == null) {
+            father.setLeftSon(newNode);
+            newNode.setFather(father);
+            this.nodes.add(newNode);
+            this.size++;
+            if (father.getRightSon() == null) {
+                this.height++;
+            } return true;
+        } return false;
+    }
+
+
+    public boolean insert(Node father, Node newNode) {
+
+        if (father.getValue() != newNode.getValue()) {
+            if (newNode.getValue() > father.getValue()) {
+                if (this.addBiggerNode(father, newNode)) {
+                    return true;
+                } return insert(father.getRightSon(), newNode);
             }
             else {
-
-                if (node1.getLeftSon() == null) {
-                    node1.setLeftSon(node2);
-                    node2.setFather(node1);
-                    this.addNode(node2);
-                }
-                else {
-                    return insert(node1.getLeftSon(), node2);
-                }
+                if (this.addLesserNode(father, newNode)) {
+                    return true;
+                } return insert(father.getLeftSon(), newNode);
             }
-        }
-
-        return false;
+        } return false;
     }
 
 
-    public boolean insert(Node node) {
-
-        return this.insert(this.root, node);
-    }
-
-
-    private boolean fetch(Node node, int val) {
+    public boolean fetch(Node node, int val) {
         
         if (node != null) {
-
             if (val == node.getValue()) {
                 return true;
             }
             else if (val > node.getValue()) {
                 return fetch(node.getRightSon(), val);
-            }
-            else {
-                return fetch(node.getLeftSon(), val);
-            }
-        }
-
-        return false;
-    }
-
-
-    public boolean fetch(int val) {
-
-        return this.fetch(this.root, val);
+            } return fetch(node.getLeftSon(), val);
+        } return false;
     }
 
 
@@ -125,11 +124,9 @@ public class Tree {
         Tree tree = new Tree(nodes[3]);
 
         for (Node node : nodes) {
-            tree.insert(node);
+            tree.insert(tree.root, node);
         }
 
-        System.out.println(tree.getRoot());
-
-        System.out.println(tree.fetch(5));
+        System.out.println(tree.height);
     }
 }
