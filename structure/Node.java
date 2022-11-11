@@ -105,6 +105,14 @@ public class Node {
     }
 
 
+    public boolean isLeaf() {
+
+        if (this.leftSon == null  &&  this.rightSon == null) {
+            return true;
+        } return false;
+    }
+
+
     public String toString() {
 
         return String.format("%d", this.value);
