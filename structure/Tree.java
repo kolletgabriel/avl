@@ -6,6 +6,8 @@ import java.util.ArrayList;
 public class Tree {
 
     private Node root;
+    private Tree leftSubTree;
+    private Tree rightSubTree;
     private ArrayList<Node> nodes;
     private ArrayList<Node> leaves;
     private int height;
@@ -16,9 +18,9 @@ public class Tree {
 
         this.root = root;
         this.nodes = new ArrayList<Node>();
+        this.nodes.add(root);
         this.leaves = new ArrayList<Node>();
-        this.height = 0;
-        this.size = 0;
+        this.leaves.add(root);
     }
 
 
@@ -40,19 +42,43 @@ public class Tree {
     }
 
 
+    public void setNodes(ArrayList<Node> nodes) {
+
+        this.nodes = nodes;
+    }
+
+
+    public void setLeaves(ArrayList<Node> leaves) {
+
+        this.leaves = leaves;
+    }
+
+
     public int getSize() {
 
         return this.size;
     }
 
 
-    public int getLength() {
+    public int getHeight() {
 
         return this.height;
     }
 
 
-    public int traceBack(Node node, int count) {
+    public void setLeftSubTree() {
+
+        ArrayList<Node> subTreeNodes = new ArrayList<Node>();
+        for (Node node : this.nodes) {
+            if (node.getValue() < this.root.getValue()) {
+                subTreeNodes.add(node);
+            }
+        }
+
+    }
+
+
+    private int traceBack(Node node, int count) {
 
         if (node.getFather() != null) {
             count++;
@@ -62,7 +88,7 @@ public class Tree {
     }
 
 
-    public void checkLeaves() {
+    private void checkLeaves() {
 
         for (Node node : this.nodes) {
             if (!node.isLeaf()) {
@@ -72,7 +98,7 @@ public class Tree {
     }
 
 
-    public void computeHeight() {
+    private void computeHeight() {
 
         for (Node leaf : this.leaves) {
             int count = 1;
@@ -84,16 +110,23 @@ public class Tree {
     }
 
 
+    private void updateStats(Node newNode) {
+
+        this.nodes.add(newNode);
+        this.leaves.add(newNode);
+        this.checkLeaves();
+        this.computeHeight();
+        this.size++;
+    }
+
+
     private boolean addBiggerNode(Node father, Node newNode) {
 
         if (father.getRightSon() == null) {
             father.setRightSon(newNode);
             newNode.setFather(father);
-            this.nodes.add(newNode);
-            this.leaves.add(newNode);
-            this.checkLeaves();
-            this.computeHeight();
-            this.size++;
+            this.updateStats(newNode);
+
             return true;
         }
         return false;
@@ -105,11 +138,8 @@ public class Tree {
         if (father.getLeftSon() == null) {
             father.setLeftSon(newNode);
             newNode.setFather(father);
-            this.nodes.add(newNode);
-            this.leaves.add(newNode);
-            this.checkLeaves();
-            this.computeHeight();
-            this.size++;
+            this.updateStats(newNode);
+
             return true;
         }
         return false;
@@ -169,7 +199,6 @@ public class Tree {
             tree.insert(tree.root, node);
         }
 
-        System.out.println(tree.height);
-        System.out.println(tree.leaves);
+
     }
 }
