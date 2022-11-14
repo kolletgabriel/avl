@@ -6,11 +6,13 @@ import java.util.ArrayList;
 public class Tree {
 
     private Node root;
+    private Tree upperTree;
     private Tree leftSubTree;
     private Tree rightSubTree;
     private ArrayList<Node> nodes;
     private ArrayList<Node> leaves;
     private int height;
+    private int balanceFactor;
     private int size;
 
 
@@ -18,187 +20,122 @@ public class Tree {
 
         this.root = root;
         this.nodes = new ArrayList<Node>();
-        this.nodes.add(root);
         this.leaves = new ArrayList<Node>();
-        this.leaves.add(root);
     }
 
 
-    public Node getRoot() {
-
-        return this.root;
-    }
-
-
-    public void setRoot(Node root) {
-
-        this.root = root;
-    }
-
-
-    public ArrayList<Node> getNodes() {
-
-        return this.nodes;
-    }
+    public                 Node getRoot()                         { return this.root;                   }
+    public            Tree getUpperTree()                         { return this.upperTree;              }
+    public          Tree getLeftSubTree()                         { return this.leftSubTree;            }
+    public         Tree getRightSubTree()                         { return this.rightSubTree;           }
+    public     ArrayList<Node> getNodes()                         { return this.nodes;                  }
+    public    ArrayList<Node> getLeaves()                         { return this.leaves;                 }
+    public                int getHeight()                         { return this.height;                 }
+    public         int getBalanceFactor()                         { return this.balanceFactor;          }
+    public                  int getSize()                         { return this.size;                   }
 
 
-    public void setNodes(ArrayList<Node> nodes) {
-
-        this.nodes = nodes;
-    }
-
-
-    public void setLeaves(ArrayList<Node> leaves) {
-
-        this.leaves = leaves;
-    }
-
-
-    public int getSize() {
-
-        return this.size;
-    }
-
-
-    public int getHeight() {
-
-        return this.height;
-    }
-
-
-    public void setLeftSubTree() {
-
-        ArrayList<Node> subTreeNodes = new ArrayList<Node>();
-        for (Node node : this.nodes) {
-            if (node.getValue() < this.root.getValue()) {
-                subTreeNodes.add(node);
-            }
-        }
-
-    }
-
-
-    private int traceBack(Node node, int count) {
-
-        if (node.getFather() != null) {
-            count++;
-            return traceBack(node.getFather(), count);
-        }
-        return count;
-    }
+    public                 void setRoot( Node root                 ) { this.root = root;                   }
+    public            void setUpperTree( Tree upperTree            ) { this.upperTree = upperTree;         }
+    public          void setLeftSubTree( Tree leftSubTree          ) { this.leftSubTree = leftSubTree;     }
+    public         void setRightSubTree( Tree rightSubTree         ) { this.rightSubTree = rightSubTree;   }
+    public                void setNodes( ArrayList<Node> nodes     ) { this.nodes = nodes;                 }
+    public               void setLeaves( ArrayList<Node> leaves    ) { this.leaves = leaves;               }
+    public               void setHeight( int height                ) { this.height = height;               }
+    public        void setBalanceFactor( int balanceFactor         ) { this.balanceFactor = balanceFactor; }
+    public                 void setSize( int size                  ) { this.size = size;                   }
 
 
     private void checkLeaves() {
+        
+        ArrayList<Node> leaves = new ArrayList<Node>();
 
         for (Node node : this.nodes) {
-            if (!node.isLeaf()) {
-                this.leaves.remove(node);
+            if (node.isLeaf()) {
+                leaves.add(node);
             }
         }
+
+        this.setLeaves(leaves);
+    }
+
+
+    private int countUpwardsFrom(Node node, int auxVar) {
+        
+        auxVar++;
+        if (node == this.root) {
+            return auxVar;
+        }
+        return countUpwardsFrom(node.getFather(), auxVar);
     }
 
 
     private void computeHeight() {
-
+        
+        int longestPath = 0;
         for (Node leaf : this.leaves) {
-            int count = 1;
-            int pathLength = this.traceBack(leaf, count);
-            if (pathLength > this.height) {
-                this.height = pathLength;
+            int count = 0;
+            int thisPath = this.countUpwardsFrom(leaf, count);
+            if (thisPath > longestPath) {
+                longestPath = thisPath;
             }
+        }
+        this.setHeight(longestPath);
+    }
+
+
+    private void computeBalanceFactor() {
+
+        if (this.leftSubTree == null  &&  this.rightSubTree == null) {
+            this.setBalanceFactor(0);
+        }
+        else if (this.leftSubTree == null) {
+            int balanceFactor = -this.rightSubTree.getHeight();
+            this.setBalanceFactor(balanceFactor);
+        }
+        else if (this.rightSubTree == null) {
+            int balanceFactor = this.leftSubTree.getHeight();
+            this.setBalanceFactor(balanceFactor);
+        }
+        else {
+            int balanceFactor = this.leftSubTree.getHeight() - this.rightSubTree.getHeight();
+            this.setBalanceFactor(balanceFactor);
         }
     }
 
 
-    private void updateStats(Node newNode) {
+    public void add(Node newNode) {
 
         this.nodes.add(newNode);
         this.leaves.add(newNode);
         this.checkLeaves();
         this.computeHeight();
+        this.computeBalanceFactor();
         this.size++;
     }
 
 
-    private boolean addBiggerNode(Node father, Node newNode) {
+    public String toString() {
 
-        if (father.getRightSon() == null) {
-            father.setRightSon(newNode);
-            newNode.setFather(father);
-            this.updateStats(newNode);
+        String nodesList = "";
+        String leavesList = "";
 
-            return true;
+        for (Node node : this.nodes) {
+            nodesList += String.format("%d ", node.getValue());
         }
-        return false;
-    }
 
-
-    private boolean addSmallerNode(Node father, Node newNode) {
-
-        if (father.getLeftSon() == null) {
-            father.setLeftSon(newNode);
-            newNode.setFather(father);
-            this.updateStats(newNode);
-
-            return true;
+        for (Node leaf : this.leaves) {
+            leavesList += String.format("%d ", leaf.getValue());
         }
-        return false;
-    }
 
-
-    public boolean insert(Node father, Node newNode) {
-
-        if (father.getValue() != newNode.getValue()) {
-            if (newNode.getValue() > father.getValue()) {
-                if (this.addBiggerNode(father, newNode)) {
-                    return true;
-                }
-                return insert(father.getRightSon(), newNode);
-            }
-            else {
-                if (this.addSmallerNode(father, newNode)) {
-                    return true;
-                }
-                return insert(father.getLeftSon(), newNode);
-            }
-        }
-        return false;
-    }
-
-
-    public boolean fetch(Node node, int val) {
-        
-        if (node != null) {
-            if (val == node.getValue()) {
-                return true;
-            }
-            else if (val > node.getValue()) {
-                return fetch(node.getRightSon(), val);
-            }
-            return fetch(node.getLeftSon(), val);
-        }
-        return false;
+        return String.format(
+            "\nroot: %d\nnodes: %s\nleaves: %s\nheight: %d\nsize: %d\nfactor: %d",
+            this.root.getValue(), nodesList, leavesList, this.height, this.size, this.balanceFactor
+        );
     }
 
 
     public static void main(String[] args) {
-
-        Node[] nodes = {
-            new Node(7),
-            new Node(2),
-            new Node(5),
-            new Node(6),
-            new Node(8),
-            new Node(15),
-            new Node(18),
-        };
-
-        Tree tree = new Tree(nodes[0]);
-
-        for (Node node : nodes) {
-            tree.insert(tree.root, node);
-        }
-
 
     }
 }
