@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "avl"
+description = "A simple AVL tree implementation."
+keywords = ["tree", "bst", "avl"]
+version = "0.1.0"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">= 3.11"
+authors = [{name = "Gabriel Kollet", email = "gabrielkollet99@gmail.com"}]
+maintainers = [{name = "Gabriel Kollet", email = "gabrielkollet99@gmail.com"}]
+
+[project.urls]
+Repository = "https://github.com/kolletgabriel/avl"
