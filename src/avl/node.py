@@ -19,7 +19,7 @@ class Node:
         return self.__parent
 
     @parent.setter
-    def parent(self, new_parent: 'Node') -> None:
+    def parent(self, new_parent: 'Node | None') -> None:
         self.__parent = new_parent
 
     @property
@@ -27,7 +27,7 @@ class Node:
         return self.__lchild
 
     @lchild.setter
-    def lchild(self, new_lchild: 'Node') -> None:
+    def lchild(self, new_lchild: 'Node | None') -> None:
         self.__lchild = new_lchild
 
     @property
@@ -35,7 +35,7 @@ class Node:
         return self.__rchild
 
     @rchild.setter
-    def rchild(self, new_rchild: 'Node') -> None:
+    def rchild(self, new_rchild: 'Node | None') -> None:
         self.__rchild = new_rchild
 
     @property
