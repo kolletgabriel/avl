@@ -13,11 +13,11 @@ class Tree:
         if key < curr_node.key:
             if curr_node.lchild is None:
                 return False
-            self._recursive_find(key, curr_node.lchild)
+            return self._recursive_find(key, curr_node.lchild)
         if key > curr_node.key:
             if curr_node.rchild is None:
                 return False
-            self._recursive_find(key, curr_node.rchild)
+            return self._recursive_find(key, curr_node.rchild)
         return True
 
     def find(self, key: int) -> bool:
@@ -29,13 +29,15 @@ class Tree:
         if key < curr_node.key:
             if curr_node.lchild is None:
                 curr_node.lchild = Node(key)
+                curr_node.lchild.parent = curr_node
                 return True
-            self._recursive_insert(key, curr_node.lchild)
+            return self._recursive_insert(key, curr_node.lchild)
         if key > curr_node.key:
             if curr_node.rchild is None:
                 curr_node.rchild = Node(key)
+                curr_node.rchild.parent = curr_node
                 return True
-            self._recursive_insert(key, curr_node.rchild)
+            return self._recursive_insert(key, curr_node.rchild)
         return False
 
     def insert(self, key: int) -> bool:
@@ -76,6 +78,52 @@ class Tree:
         else:
             raise ValueError('Order must be: preorder, inorder or postorder.')
         return result
+
+    def _get_successor(self, node: Node) -> Node | None:
+        curr: Node | None = node.rchild
+        while curr is not None and curr.lchild is not None:
+            curr = curr.lchild
+        return curr
+
+    def _recursive_delete(self, key: int, curr_node: Node) -> bool:
+        if key < curr_node.key:
+            if curr_node.lchild is None:
+                return False
+            return self._recursive_delete(key, curr_node.lchild)
+        if key > curr_node.key:
+            if curr_node.rchild is None:
+                return False
+            return self._recursive_delete(key, curr_node.rchild)
+        # When it has both children:
+        if curr_node.lchild is not None and curr_node.rchild is not None:
+            successor: Node | None = self._get_successor(curr_node)
+            if successor is not None:
+                curr_node.key = successor.key
+                return self._recursive_delete(successor.key, successor)
+        # When it has right child only:
+        if curr_node.lchild is None and curr_node.rchild is not None:
+            curr_node.key = curr_node.rchild.key
+            return self._recursive_delete(curr_node.rchild.key, curr_node.rchild)
+        # When it has left child only:
+        if curr_node.rchild is None and curr_node.lchild is not None:
+            curr_node.key = curr_node.lchild.key
+            return self._recursive_delete(curr_node.lchild.key, curr_node.lchild)
+        # When it's a leaf:
+        if curr_node.parent is not None:
+            if curr_node.key < curr_node.parent.key:
+                curr_node.parent.lchild = None
+                curr_node.parent = None
+            else:
+                curr_node.parent.rchild = None
+                curr_node.parent = None
+        else:
+            self.__root = None
+        return True
+
+    def delete(self, key: int) -> bool:
+        if self.__root is None:
+            return False
+        return self._recursive_delete(key, self.__root)
 
 
 if __name__ == '__main__':
