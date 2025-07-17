@@ -46,6 +46,15 @@ class Node:
     def isleaf(self) -> bool:
         return self.__lchild is None and self.__rchild is None
 
+    @property
+    def height(self) -> int:
+        h: int = 1
+        parent: 'Node | None' = self.parent
+        while parent is not None:
+            parent = parent.parent
+            h += 1
+        return h
+
 
 if __name__ == '__main__':
     ...
