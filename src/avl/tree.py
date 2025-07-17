@@ -125,6 +125,30 @@ class Tree:
             return False
         return self._recursive_delete(key, self.__root)
 
+    def _recursive_height(self, node: Node | None) -> int:
+        if node is None:
+            return 0
+        lsubtree_height: int = self._recursive_height(node.lchild)
+        rsubtree_height: int = self._recursive_height(node.rchild)
+        height: int = max(lsubtree_height, rsubtree_height) + 1
+        return height
+
+    @property
+    def height(self) -> int:
+        return self._recursive_height(self.__root)
+
+    def _recursive_balance_factor(self, node: Node | None) -> int:
+        if node is None:
+            return 0
+        lsubtree_height: int = self._recursive_height(node.lchild)
+        rsubtree_height: int = self._recursive_height(node.rchild)
+        factor: int = lsubtree_height - rsubtree_height
+        return factor
+
+    @property
+    def balance_factor(self) -> int:
+        return self._recursive_balance_factor(self.__root)
+
 
 if __name__ == '__main__':
     ...
