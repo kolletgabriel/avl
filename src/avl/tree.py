@@ -149,6 +149,50 @@ class Tree:
     def balance_factor(self) -> int:
         return self._recursive_balance_factor(self.__root)
 
+    def _check(self, node: Node) -> Node | None:
+        parent: Node | None = node.parent
+        while parent is not None:
+            parent_factor: int = self._recursive_balance_factor(parent)
+            if abs(parent_factor) == 2:
+                return parent
+            parent = parent.parent
+        return None
+
+    def _rotate_right(self, node: Node) -> None:
+        if node.parent is None:
+            hold: Node | None = node.lchild
+            node.lchild.parent = None
+            node.lchild = None
+            node.parent = hold
+            node.lchild = hold.rchild
+            hold.rchild = node
+            self.__root = hold
+        else:
+            hold: Node | None = node.lchild
+            hold2: Node = node.parent
+            node.lchild.parent = None
+            node.lchild = None
+            node.parent = hold
+            node.lchild = hold.rchild
+            hold.rchild = node
+            hold.parent = hold2
+            hold2.rchild = hold
+
+    def _recursive_rotation(self, node: Node) -> None:
+        factor: int = self._recursive_balance_factor(node)
+        if factor > 0:
+            child_factor: int = self._recursive_balance_factor(node.lchild)
+            if child_factor > 0: # LL
+                ...
+            else: # LR
+                ...
+        else:
+            child_factor: int = self._recursive_balance_factor(node.rchild)
+            if child_factor > 0: # RL
+                ...
+            else: # RR
+                ...
+
 
 if __name__ == '__main__':
     ...
