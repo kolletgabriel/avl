@@ -214,20 +214,22 @@ class Tree:
             hold.parent = hold2
             hold2.rchild = hold
 
-    def _recursive_rotation(self, node: Node) -> None:
+    def _rotation(self, node: Node) -> None:
         factor: int = self._recursive_balance_factor(node)
         if factor > 0:
             child_factor: int = self._recursive_balance_factor(node.lchild)
             if child_factor > 0: # LL
-                ...
+                self._rotate_right(node)
             else: # LR
-                ...
+                self._pre_rotate_right(node)
+                self._rotate_right(node)
         else:
             child_factor: int = self._recursive_balance_factor(node.rchild)
             if child_factor > 0: # RL
-                ...
+                self._pre_rotate_left(node)
+                self._rotate_left(node)
             else: # RR
-                ...
+                self._rotate_left(node)
 
 
 if __name__ == '__main__':
