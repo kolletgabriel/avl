@@ -158,6 +158,16 @@ class Tree:
             parent = parent.parent
         return None
 
+    def _pre_rotate_left(self, node: Node) -> None:
+        hold: Node = node.rchild
+        hold2: Node | None = hold.lchild.rchild
+        node.rchild = hold.lchild
+        hold.lchild.parent = node
+        node.rchild.rchild = hold
+        hold.parent = node.rchild
+        hold.lchild = hold2
+        hold2.parent = hold
+
     def _rotate_left(self, node: Node) -> None:
         if node.parent is None:
             hold: Node = node.rchild
@@ -173,6 +183,16 @@ class Tree:
             hold.lchild = node
             hold.parent = hold2
             hold2.rchild = hold
+
+    def _pre_rotate_right(self, node: Node) -> None:
+        hold: Node = node.lchild
+        hold2: Node | None = hold.rchild.lchild
+        node.lchild = hold.rchild
+        hold.rchild.parent = node
+        node.lchild.lchild = hold
+        hold.parent = node.lchild
+        hold.rchild = hold2
+        hold2.parent = hold
 
     def _rotate_right(self, node: Node) -> None:
         if node.parent is None:

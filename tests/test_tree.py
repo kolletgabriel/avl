@@ -220,6 +220,25 @@ class TestTree(unittest.TestCase):
         self.assertEqual(self.t.balance_factor, -1)
         self.assertEqual(self.t._recursive_balance_factor(self.t.root.lchild), 4)
 
+    def test_pre_rotate_left(self) -> None:
+        self.t.insert(2)
+        self.t.insert(1)
+        self.t.insert(6)
+        self.t.insert(4)
+        self.t.insert(7)
+        self.t.insert(3)
+        self.t.insert(5)
+        self.t._pre_rotate_left(self.t.root)
+        self.assertEqual(self.t.root.key, 2)
+        self.assertEqual(self.t.root.lchild.key, 1)
+        self.assertIsNone(self.t.root.lchild.lchild)
+        self.assertIsNone(self.t.root.lchild.rchild)
+        self.assertEqual(self.t.root.rchild.key, 4)
+        self.assertEqual(self.t.root.rchild.lchild.key, 3)
+        self.assertEqual(self.t.root.rchild.rchild.key, 6)
+        self.assertEqual(self.t.root.rchild.rchild.lchild.key, 5)
+        self.assertEqual(self.t.root.rchild.rchild.rchild.key, 7)
+
     def test_rotate_left(self) -> None:
         self.t.insert(2)
         self.t.insert(1)
@@ -256,6 +275,23 @@ class TestTree(unittest.TestCase):
         self.assertEqual(self.t.root.lchild.key, 15)
         self.assertEqual(self.t.root.lchild.lchild.key, 6)
         self.assertEqual(self.t.root.lchild.rchild.key, 27)
+
+    def test_pre_rotate_right(self) -> None:
+        self.t.insert(6)
+        self.t.insert(2)
+        self.t.insert(7)
+        self.t.insert(1)
+        self.t.insert(4)
+        self.t.insert(3)
+        self.t.insert(5)
+        self.t._pre_rotate_right(self.t.root)
+        self.assertEqual(self.t.root.key, 6)
+        self.assertEqual(self.t.root.lchild.key, 4)
+        self.assertEqual(self.t.root.rchild.key, 7)
+        self.assertEqual(self.t.root.lchild.lchild.key, 2)
+        self.assertEqual(self.t.root.lchild.rchild.key, 5)
+        self.assertEqual(self.t.root.lchild.lchild.lchild.key, 1)
+        self.assertEqual(self.t.root.lchild.lchild.rchild.key, 3)
 
     def test_rotate_right(self) -> None:
         self.t.insert(42)
