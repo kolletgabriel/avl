@@ -133,9 +133,9 @@ class Tree:
             return any([Tree._recursive_insert(k, self.root) for k in keys[1:]])
         return any([Tree._recursive_insert(k, self.root) for k in keys])
 
-    def find(self, key: int) -> bool:
+    def find(self, key: int) -> Node | None:
         if self.root is None:
-            return False
+            return None
         return Tree._recursive_find(key, self.root)
 
     def delete(self, key: int) -> bool:
