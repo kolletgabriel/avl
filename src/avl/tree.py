@@ -43,31 +43,18 @@ class Tree:
         return curr
 
     @staticmethod
-    def _recursive_delete(key: int, node: Node) -> bool:
-        to_delete: Node | None = Tree._recursive_find(key, node)
-        if to_delete is None:
-            return False
+    def _recursive_delete(node: Node) -> Node:
         if node.lchild is not None and node.rchild is not None:  # has both
             successor: Node | None = Tree._get_successor(node)
-            if successor is not None:
-                node.key = successor.key
-                return Tree._recursive_delete(successor.key, successor)
+            node.key = successor.key
+            return Tree._recursive_delete(successor)
         if node.lchild is not None:  # has left only
             node.key = node.lchild.key
-            return Tree._recursive_delete(node.lchild.key, node.lchild)
+            return Tree._recursive_delete(node.lchild)
         if node.rchild is not None:  # has right only
             node.key = node.rchild.key
-            return Tree._recursive_delete(node.rchild.key, node.rchild)
-        if node.parent is not None:
-            if node < node.parent:
-                node.parent.lchild = None
-                node.parent = None
-            else:
-                node.parent.rchild = None
-                node.parent = None
-        else:
-            self.root = None
-        return True
+            return Tree._recursive_delete(node.rchild)
+        return node  # reched leaf
 
     @staticmethod
     def _recursive_preorder(node: Node | None, keys: list[int]) -> None:
@@ -139,9 +126,19 @@ class Tree:
         return Tree._recursive_find(key, self.root)
 
     def delete(self, key: int) -> bool:
-        if self.root is None:
+        to_delete: Node | None = self.find(key)
+        if to_delete is None:
             return False
-        return Tree._recursive_delete(key, self.root)
+        to_delete = Tree._recursive_delete(to_delete)
+        if to_delete.parent is None:
+            self.root = None
+            return True
+        if to_delete.parent.lchild == to_delete:
+            to_delete.parent.lchild = None
+        else:
+            to_delete.parent.rchild = None
+        to_delete.parent = None
+        return True
 
     def traverse(self, order:str) -> list[int]:
         result: list[int] = []

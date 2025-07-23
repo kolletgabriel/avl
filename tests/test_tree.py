@@ -141,5 +141,53 @@ class TestTree(unittest.TestCase):
         self.assertIsNone(n8)
 
 
+    def test_delete(self) -> None:
+        self.t.insert(4, 2, 6, 1, 3, 5, 7)
+
+        self.assertTrue(self.t.delete(2))
+        self.assertIsNone(self.t.find(2))
+        self.assertEqual(self.t.root, 4)
+        self.assertIsNotNone(self.t.root.lchild)
+        self.assertEqual(self.t.root.lchild, 3)
+        self.assertEqual(self.t.root.lchild.parent, 4)
+        self.assertIsNone(self.t.root.lchild.rchild)
+
+        self.assertTrue(self.t.delete(3))
+        self.assertIsNone(self.t.find(3))
+        self.assertEqual(self.t.root, 4)
+        self.assertIsNotNone(self.t.root.lchild)
+        self.assertEqual(self.t.root.lchild, 1)
+        self.assertIsNotNone(self.t.root.lchild.parent, 4)
+
+        self.assertTrue(self.t.delete(6))
+        self.assertIsNone(self.t.find(6))
+        self.assertEqual(self.t.root, 4)
+        self.assertIsNotNone(self.t.root.rchild)
+        self.assertEqual(self.t.root.rchild, 7)
+        self.assertEqual(self.t.root.rchild.parent, 4)
+        self.assertIsNone(self.t.root.rchild.rchild)
+
+        self.assertTrue(self.t.delete(5))
+        self.assertIsNone(self.t.find(5))
+        self.assertEqual(self.t.root, 4)
+        self.assertIsNone(self.t.root.rchild.rchild)
+        self.assertIsNone(self.t.root.rchild.lchild)
+
+        self.assertTrue(self.t.delete(4))
+        self.assertIsNone(self.t.find(4))
+        self.assertEqual(self.t.root, 7)
+        self.assertIsNotNone(self.t.root.lchild)
+        self.assertEqual(self.t.root.lchild, 1)
+        self.assertIsNone(self.t.root.rchild)
+
+        self.assertTrue(self.t.delete(7))
+        self.assertIsNone(self.t.find(7))
+        self.assertEqual(self.t.root, 1)
+
+        self.assertTrue(self.t.delete(1))
+        self.assertIsNone(self.t.find(1))
+        self.assertIsNone(self.t.root)
+
+
 if __name__ == '__main__':
     unittest.main()
