@@ -189,5 +189,16 @@ class TestTree(unittest.TestCase):
         self.assertIsNone(self.t.root)
 
 
+    def test_traverse(self) -> None:
+        self.t.insert(4, 2, 6, 1, 3, 5, 7)
+
+        self.assertEqual([k for k in self.t.traverse('preorder')],
+                         [4, 2, 1, 3, 6, 5, 7])
+        self.assertEqual([k for k in self.t.traverse('inorder')],
+                         [1, 2, 3, 4, 5, 6, 7])
+        self.assertEqual([k for k in self.t.traverse('postorder')],
+                         [1, 3, 2, 5, 7, 6, 4])
+
+
 if __name__ == '__main__':
     unittest.main()

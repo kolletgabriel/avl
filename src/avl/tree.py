@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from avl.node import Node
 
 
@@ -57,28 +58,28 @@ class Tree:
         return node  # reched leaf
 
     @staticmethod
-    def _recursive_preorder(node: Node | None, keys: list[int]) -> None:
+    def _recursive_preorder(node: Node | None) -> Generator[int, None, None]:
         if node is None:
             return None
-        keys.append(node.key)
-        Tree._recursive_preorder(node.lchild, keys)
-        Tree._recursive_preorder(node.rchild, keys)
+        yield node.key
+        yield from Tree._recursive_preorder(node.lchild)
+        yield from Tree._recursive_preorder(node.rchild)
 
     @staticmethod
-    def _recursive_inorder(node: Node | None, keys: list[int]) -> None:
+    def _recursive_inorder(node: Node | None) -> Generator[int, None, None]:
         if node is None:
             return None
-        Tree._recursive_inorder(node.lchild, keys)
-        keys.append(node.key)
-        Tree._recursive_inorder(node.rchild, keys)
+        yield from Tree._recursive_inorder(node.lchild)
+        yield node.key
+        yield from Tree._recursive_inorder(node.rchild)
 
     @staticmethod
-    def _recursive_postorder(node: Node | None, keys: list[int]) -> None:
+    def _recursive_postorder(node: Node | None) -> Generator[int, None, None]:
         if node is None:
             return None
-        Tree._recursive_postorder(node.lchild, keys)
-        Tree._recursive_postorder(node.rchild, keys)
-        keys.append(node.key)
+        yield from Tree._recursive_postorder(node.lchild)
+        yield from Tree._recursive_postorder(node.rchild)
+        yield node.key
 
     @staticmethod
     def _recursive_height(node: Node | None) -> int:
@@ -140,17 +141,15 @@ class Tree:
         to_delete.parent = None
         return True
 
-    def traverse(self, order:str) -> list[int]:
-        result: list[int] = []
+    def traverse(self, order:str) -> Generator[int, None, None]:
         if order == 'preorder':
-            Tree._recursive_preorder(self.root, result)
+            yield from Tree._recursive_preorder(self.root)
         elif order == 'inorder':
-            Tree._recursive_inorder(self.root, result)
+            yield from Tree._recursive_inorder(self.root)
         elif order == 'postorder':
-            Tree._recursive_postorder(self.root, result)
+            yield from Tree._recursive_postorder(self.root)
         else:
             raise ValueError('Order must be: preorder, inorder or postorder.')
-        return result
 
 
 if __name__ == '__main__':
