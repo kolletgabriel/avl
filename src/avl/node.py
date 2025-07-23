@@ -13,9 +13,10 @@ class Node:
         return f'{self.key}'
 
     def __repr__(self) -> str:
-        return f'Node(key={self.key},\
-                parent={self.parent},\
-                lchild={self.lchild},rchild={self.rchild})'
+        return f'Node(key={self.key},'\
+            + f'parent={self.parent},'\
+            + f'lchild={self.lchild},'\
+            + f'rchild={self.rchild})'
 
     def __eq__(self, other) -> bool:
         if isinstance(other, int):
