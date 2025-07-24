@@ -1,4 +1,4 @@
-from collections.abc import Generator
+from collections.abc import Generator, Iterator
 from avl.node import Node
 
 
@@ -6,6 +6,19 @@ class Tree:
 
     def __init__(self, root: Node | None = None) -> None:
         self.root = root
+
+    def __iter__(self) -> Iterator:
+        yield from self.traverse('preorder')
+
+    def __len__(self) -> int:
+        len: int = 0
+        g: Generator = self.traverse('preorder')
+        while True:
+            try:
+                next(g)
+                len += 1
+            except StopIteration:
+                return len
 
 
     @staticmethod
