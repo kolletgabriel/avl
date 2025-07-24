@@ -123,6 +123,21 @@ class Tree:
         return None
 
 
+    def _rotate_left(self, node: Node) -> bool:
+        if node.rchild is None:
+            return False
+        hold_parent: Node | None = node.parent
+        hold_child: Node | None = node.rchild.lchild
+        node.parent = node.rchild
+        node.parent.lchild = node
+        node.parent.parent = hold_parent
+        if node.parent.parent is None:
+            self.root = node.parent
+        node.rchild = hold_child
+        if node.rchild is not None:
+            node.rchild.parent = node
+        return True
+
     def insert(self, *keys: int) -> bool:
         if len(keys) == 1:
             if self.root is None:
