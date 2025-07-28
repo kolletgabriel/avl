@@ -134,7 +134,7 @@ class Tree:
         if node.parent.parent is None:
             self.root = node.parent
         else:
-            node.parent.parent.rchild = node.parent
+            node.parent.parent.lchild = node.parent
         node.rchild = hold_child
         if node.rchild is not None:
             node.rchild.parent = node
@@ -151,7 +151,7 @@ class Tree:
         if node.parent.parent is None:
             self.root = node.parent
         else:
-            node.parent.parent.lchild = node.parent
+            node.parent.parent.rchild = node.parent
         node.lchild = hold_child
         if node.lchild is not None:
             node.lchild.parent = node
