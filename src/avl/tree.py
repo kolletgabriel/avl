@@ -133,6 +133,8 @@ class Tree:
         node.parent.parent = hold_parent
         if node.parent.parent is None:
             self.root = node.parent
+        elif node.parent.parent < node.parent:
+            node.parent.parent.rchild = node.parent
         else:
             node.parent.parent.lchild = node.parent
         node.rchild = hold_child
@@ -150,12 +152,27 @@ class Tree:
         node.parent.parent = hold_parent
         if node.parent.parent is None:
             self.root = node.parent
+        elif node.parent.parent > node.parent:
+            node.parent.parent.lchild = node.parent
         else:
             node.parent.parent.rchild = node.parent
         node.lchild = hold_child
         if node.lchild is not None:
             node.lchild.parent = node
         return True
+
+    def _rotate(self, node: Node) -> bool:
+        if self._recursive_balance_factor(node) < 0:
+            if self._recursive_balance_factor(node.rchild) < 0:
+                return self._rotate_left(node)
+            return all(
+                [self._rotate_right(node.rchild), self._rotate_left(node)]
+            )
+        if self._recursive_balance_factor(node.lchild) > 0:
+            return self._rotate_right(node)
+        return all(
+            [self._rotate_left(node.lchild), self._rotate_right(node)]
+        )
 
     def insert(self, *keys: int) -> bool:
         if len(keys) == 1:
