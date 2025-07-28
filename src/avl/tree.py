@@ -133,9 +133,28 @@ class Tree:
         node.parent.parent = hold_parent
         if node.parent.parent is None:
             self.root = node.parent
+        else:
+            node.parent.parent.rchild = node.parent
         node.rchild = hold_child
         if node.rchild is not None:
             node.rchild.parent = node
+        return True
+
+    def _rotate_right(self, node: Node) -> bool:
+        if node.lchild is None:
+            return False
+        hold_parent: Node | None = node.parent
+        hold_child: Node | None = node.lchild.rchild
+        node.parent = node.lchild
+        node.parent.rchild = node
+        node.parent.parent = hold_parent
+        if node.parent.parent is None:
+            self.root = node.parent
+        else:
+            node.parent.parent.lchild = node.parent
+        node.lchild = hold_child
+        if node.lchild is not None:
+            node.lchild.parent = node
         return True
 
     def insert(self, *keys: int) -> bool:

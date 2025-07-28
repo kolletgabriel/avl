@@ -250,7 +250,7 @@ class TestTree(unittest.TestCase):
         self.assertIsNone(n7.rchild)
 
 
-    def rotate_nonroot_left(self) -> None:
+    def test_rotate_nonroot_left(self) -> None:
         self.t.insert(2, 1, 4, 3, 6, 5, 7)
         self.assertTrue(self.t._rotate_left(self.t.root.rchild))
         n4 = self.t.find(4)
@@ -296,6 +296,101 @@ class TestTree(unittest.TestCase):
         self.assertIsNone(n5.rchild)
         self.assertIsNone(n7.lchild)
         self.assertIsNone(n7.rchild)
+
+
+    def test_rotate_root_right(self) -> None:
+        self.t.insert(6, 4, 7, 2, 5, 1, 3)
+        self.t._rotate_right(self.t.root)
+        n4 = self.t.find(4)
+        n2 = self.t.find(2)
+        n6 = self.t.find(6)
+        n1 = self.t.find(1)
+        n3 = self.t.find(3)
+        n5 = self.t.find(5)
+        n7 = self.t.find(7)
+
+        self.assertIsNotNone(n4)
+        self.assertEqual(n4, self.t.root)
+        self.assertIsNotNone(n4.lchild)
+        self.assertEqual(n4.lchild, n2)
+        self.assertIsNotNone(n4.lchild.parent)
+        self.assertEqual(n4.lchild.parent, n4)
+        self.assertIsNotNone(n4.rchild)
+        self.assertEqual(n4.rchild, n6)
+        self.assertIsNotNone(n4.rchild.parent)
+        self.assertEqual(n4.rchild.parent, n4)
+
+        self.assertIsNotNone(n2.lchild)
+        self.assertEqual(n2.lchild, n1)
+        self.assertIsNotNone(n2.lchild.parent)
+        self.assertEqual(n2.lchild.parent, n2)
+        self.assertIsNotNone(n2.rchild)
+        self.assertEqual(n2.rchild, n3)
+        self.assertIsNotNone(n2.rchild.parent)
+        self.assertEqual(n2.rchild.parent, n2)
+
+        self.assertIsNotNone(n6.lchild)
+        self.assertEqual(n6.lchild, n5)
+        self.assertIsNotNone(n6.lchild.parent)
+        self.assertEqual(n6.lchild.parent, n6)
+        self.assertIsNotNone(n6.rchild)
+        self.assertEqual(n6.rchild, n7)
+        self.assertIsNotNone(n6.rchild.parent)
+        self.assertEqual(n6.rchild.parent, n6)
+
+        self.assertIsNone(n1.lchild)
+        self.assertIsNone(n1.rchild)
+        self.assertIsNone(n3.lchild)
+        self.assertIsNone(n3.rchild)
+        self.assertIsNone(n5.lchild)
+        self.assertIsNone(n5.rchild)
+        self.assertIsNone(n7.lchild)
+        self.assertIsNone(n7.rchild)
+
+
+    def test_rotate_nonroot_right(self) -> None:
+        self.t.insert(6 ,4, 7, 2, 5, 1, 3)
+        self.t._rotate_right(self.t.root.lchild)
+
+        n6 = self.t.find(6)
+        n4 = self.t.find(4)
+        n7 = self.t.find(7)
+        n2 = self.t.find(2)
+        n5 = self.t.find(5)
+        n1 = self.t.find(1)
+        n3 = self.t.find(3)
+
+        self.assertIsNotNone(self.t.root)
+        self.assertIsNotNone(n6)
+        self.assertIsNotNone(n4)
+        self.assertIsNotNone(n7)
+        self.assertIsNotNone(n2)
+        self.assertIsNotNone(n5)
+        self.assertIsNotNone(n1)
+        self.assertIsNotNone(n3)
+
+        self.assertEqual(self.t.root, n6)
+        self.assertEqual(n6.lchild, n2)
+        self.assertEqual(n2.parent, n6)
+        self.assertEqual(n6.rchild, n7)
+        self.assertEqual(n7.parent, n6)
+
+        self.assertEqual(n2.lchild, n1)
+        self.assertEqual(n1.parent, n2)
+        self.assertEqual(n2.rchild, n4)
+        self.assertEqual(n4.parent, n2)
+
+        self.assertEqual(n4.lchild, n3)
+        self.assertEqual(n3.parent, n4)
+        self.assertEqual(n4.rchild, n5)
+        self.assertEqual(n5.parent, n4)
+
+        self.assertIsNone(n1.lchild)
+        self.assertIsNone(n1.rchild)
+        self.assertIsNone(n3.lchild)
+        self.assertIsNone(n3.rchild)
+        self.assertIsNone(n5.lchild)
+        self.assertIsNone(n5.rchild)
 
 
 if __name__ == '__main__':
