@@ -206,6 +206,10 @@ class TestTree(unittest.TestCase):
         self.assertEqual(self.t.root, 7)
         self.assertEqual(self.t.root.lchild, 6)
         self.assertEqual(self.t.root.lchild.lchild, 5)
+        self.t._rotate_right(self.t.root)
+        self.assertEqual(self.t.root, 6)
+        self.assertEqual(self.t.root.lchild, 5)
+        self.assertEqual(self.t.root.rchild, 7)
 
 
 if __name__ == '__main__':
