@@ -59,6 +59,50 @@ class TestTree(unittest.TestCase):
         self.assertFalse(self.t.insert(2, 1, 3))
 
 
+    def test_balanced_insert(self) -> None:
+        self.t.insert(2, 1, 4, 3, 6, 5, 7)
+
+        n2 = self.t.find(2)
+        n1 = self.t.find(1)
+        n4 = self.t.find(4)
+        n3 = self.t.find(3)
+        n6 = self.t.find(6)
+        n5 = self.t.find(5)
+        n7 = self.t.find(7)
+        self.assertIsNotNone(n2)
+        self.assertIsNotNone(n1)
+        self.assertIsNotNone(n4)
+        self.assertIsNotNone(n3)
+        self.assertIsNotNone(n6)
+        self.assertIsNotNone(n5)
+        self.assertIsNotNone(n7)
+
+        self.assertEqual(self.t.root, n4)
+
+        self.assertEqual(n4.lchild, n2)
+        self.assertEqual(n2.parent, n4)
+        self.assertEqual(n2.lchild, n1)
+        self.assertEqual(n1.parent, n2)
+        self.assertEqual(n2.rchild, n3)
+        self.assertEqual(n3.parent, n2)
+
+        self.assertEqual(n4.rchild, n6)
+        self.assertEqual(n6.parent, n4)
+        self.assertEqual(n6.lchild, n5)
+        self.assertEqual(n5.parent, n6)
+        self.assertEqual(n6.rchild, n7)
+        self.assertEqual(n7.parent, n6)
+
+        self.assertIsNone(n1.lchild)
+        self.assertIsNone(n1.rchild)
+        self.assertIsNone(n3.lchild)
+        self.assertIsNone(n3.rchild)
+        self.assertIsNone(n5.lchild)
+        self.assertIsNone(n5.rchild)
+        self.assertIsNone(n7.lchild)
+        self.assertIsNone(n7.rchild)
+
+
     def test_find(self) -> None:
         self.t.insert(4, 2, 1, 3, 6, 5, 7)
 
@@ -189,6 +233,42 @@ class TestTree(unittest.TestCase):
         self.assertIsNone(self.t.root)
 
 
+    def test_delete_balanced(self) -> None:
+        self.t.insert(4, 2, 6, 1, 3, 5, 7)
+        self.assertTrue(self.t.delete(6))
+        self.assertTrue(self.t.delete(5))
+        self.assertTrue(self.t.delete(7))
+
+        n4 = self.t.find(4)
+        n2 = self.t.find(2)
+        n6 = self.t.find(6)
+        n1 = self.t.find(1)
+        n3 = self.t.find(3)
+        n5 = self.t.find(5)
+        n7 = self.t.find(7)
+        self.assertIsNotNone(n4)
+        self.assertIsNotNone(n2)
+        self.assertIsNotNone(n1)
+        self.assertIsNotNone(n3)
+        self.assertIsNone(n6)
+        self.assertIsNone(n5)
+        self.assertIsNone(n7)
+
+        self.assertEqual(self.t.root, n2)
+        self.assertEqual(n2.lchild, n1)
+        self.assertEqual(n1.parent, n2)
+        self.assertEqual(n2.rchild, n4)
+        self.assertEqual(n4.parent, n2)
+        self.assertEqual(n4.lchild, n3)
+        self.assertEqual(n3.parent, n4)
+        self.assertIsNone(n4.rchild)
+
+        self.assertIsNone(n1.lchild)
+        self.assertIsNone(n1.rchild)
+        self.assertIsNone(n3.lchild)
+        self.assertIsNone(n3.rchild)
+
+
     def test_traverse(self) -> None:
         self.t.insert(4, 2, 6, 1, 3, 5, 7)
 
@@ -202,7 +282,7 @@ class TestTree(unittest.TestCase):
 
     def test_rotate_ll_root(self) -> None:
         self.t.insert(2, 1, 4, 3, 6, 5, 7)
-        self.assertTrue(self.t._rotate(self.t.root))
+        # self.assertTrue(self.t._rotate(self.t.root))
 
         n2 = self.t.find(2)
         n1 = self.t.find(1)
@@ -247,7 +327,7 @@ class TestTree(unittest.TestCase):
 
     def test_rotate_ll_nonroot(self) -> None:
         self.t.insert(5, 3, 7, 1, 4, 6, 9, 2, 8, 10, 11)
-        self.assertTrue(self.t._rotate(self.t.root.rchild))
+        # self.assertTrue(self.t._rotate(self.t.root.rchild))
 
         n5 = self.t.find(5)
         n3 = self.t.find(3)
@@ -303,7 +383,7 @@ class TestTree(unittest.TestCase):
 
     def test_rotate_rr_root(self) -> None:
         self.t.insert(6, 4, 7, 2, 5, 1, 3)
-        self.assertTrue(self.t._rotate(self.t.root))
+        # self.assertTrue(self.t._rotate(self.t.root))
 
         n6 = self.t.find(6)
         n4 = self.t.find(4)
@@ -348,7 +428,7 @@ class TestTree(unittest.TestCase):
 
     def test_rotate_rr_nonroot(self) -> None:
         self.t.insert(7, 5, 9, 3, 6, 8, 11, 2, 4, 10, 1)
-        self.assertTrue(self.t._rotate(self.t.root.lchild))
+        # self.assertTrue(self.t._rotate(self.t.root.lchild))
 
         n7 = self.t.find(7)
         n5 = self.t.find(5)
@@ -403,7 +483,7 @@ class TestTree(unittest.TestCase):
 
     def test_rotate_lr_root(self) -> None:
         self.t.insert(6, 2, 7, 1, 4, 3, 5)
-        self.assertTrue(self.t._rotate(self.t.root))
+        # self.assertTrue(self.t._rotate(self.t.root))
 
         n6 = self.t.find(6)
         n2 = self.t.find(2)
@@ -448,7 +528,7 @@ class TestTree(unittest.TestCase):
 
     def test_rotate_lr_nonroot(self) -> None:
         self.t.insert(8, 6, 10, 2, 7, 9, 12, 1, 4, 11, 3, 5)
-        self.assertTrue(self.t._rotate(self.t.root.lchild))
+        # self.assertTrue(self.t._rotate(self.t.root.lchild))
 
         n8 = self.t.find(8)
         n6 = self.t.find(6)
@@ -516,7 +596,7 @@ class TestTree(unittest.TestCase):
 
     def test_rotate_rl_root(self) -> None:
         self.t.insert(2, 1, 6, 4, 7, 3, 5)
-        self.assertTrue(self.t._rotate(self.t.root))
+        # self.assertTrue(self.t._rotate(self.t.root))
 
         n2 = self.t.find(2)
         n1 = self.t.find(1)
@@ -561,7 +641,7 @@ class TestTree(unittest.TestCase):
 
     def test_rotate_rl_nonroot(self) -> None:
         self.t.insert(5, 3, 7, 1, 4, 6, 11, 2, 9, 12, 8, 10)
-        self.assertTrue(self.t._rotate(self.t.root.rchild))
+        # self.assertTrue(self.t._rotate(self.t.root.rchild))
 
         n5 = self.t.find(5)
         n3 = self.t.find(3)
