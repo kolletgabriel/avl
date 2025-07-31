@@ -96,6 +96,21 @@ class Tree:
         yield from self._recursive_postorder(node.rchild)
         yield node.key
 
+    def _level_order_traversal(self) -> Generator[int, None, None]:
+        if self.root is None:
+            return None
+        queue: list[Node] = []
+        queue.append(self.root)
+        while len(queue) > 0:
+            for _ in range(len(queue)):
+                node: Node = queue.pop(0)
+                yield node.key
+                if node.lchild is not None:
+                    queue.append(node.lchild)
+                if node.rchild is not None:
+                    queue.append(node.rchild)
+
+
     def _recursive_height(self, node: Node | None) -> int:
         if node is None:
             return 0
@@ -210,15 +225,17 @@ class Tree:
         return True
 
     def traverse(self, order:str) -> Generator[int, None, None]:
-        if order == 'preorder':
-            yield from self._recursive_preorder(self.root)
-        elif order == 'inorder':
-            yield from self._recursive_inorder(self.root)
-        elif order == 'postorder':
-            yield from self._recursive_postorder(self.root)
-        else:
-            raise ValueError('Order must be: preorder, inorder or postorder.')
-
+        match order:
+            case 'preorder':
+                yield from self._recursive_preorder(self.root)
+            case 'inorder':
+                yield from self._recursive_inorder(self.root)
+            case 'postorder':
+                yield from self._recursive_postorder(self.root)
+            case 'level':
+                yield from self._level_order_traversal()
+            case _:
+               raise ValueError('Order must be: preorder, inorder or postorder.') 
 
 if __name__ == '__main__':
     ...

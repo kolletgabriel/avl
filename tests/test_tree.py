@@ -278,6 +278,8 @@ class TestTree(unittest.TestCase):
                          [1, 2, 3, 4, 5, 6, 7])
         self.assertEqual([k for k in self.t.traverse('postorder')],
                          [1, 3, 2, 5, 7, 6, 4])
+        self.assertEqual([k for k in self.t.traverse('level')],
+                         [4, 2, 6, 1, 3, 5, 7])
 
 
     def test_rotate_ll_root(self) -> None:
